@@ -56,6 +56,8 @@ def main():
         startat = config.getint('DEFAULT', 'startat')
         firsttime = False
     else:
+        scanner = None
+        scan_area = 'A4'
         rot = 0
         perpage = 1
         threshold = 128
@@ -64,12 +66,11 @@ def main():
     sane.init()
 
     devices = sane.get_devices()
-    if scanner:
+    if scanner is not None:
         print('using %s...' % str(devices[scanner]))
         device = devices[scanner]
     else:
         device = select(devices)
-        scan_area = 'A5'
     devname = device[0]
     dev = sane.open(devname)
     dev.scan_area = scan_area
