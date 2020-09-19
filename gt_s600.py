@@ -79,7 +79,7 @@ def main():
     # set_trace()
 
     ret = 0
-    n = 0
+    n = -1
     while True:
         msg, rot_turn = calc_page_params(perpage, righttoleft, startat, n, 1, turnbyturn)
         print(msg)
