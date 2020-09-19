@@ -1,6 +1,8 @@
+#!/usr/bin/env python3
 import os
 import sys
 import sane
+import time
 from configparser import ConfigParser
 from pdb import set_trace
 
@@ -33,11 +35,11 @@ def calc_page_params(perpage, righttoleft, startat, last, inc, turnbyturn):
         msg = '[page%03d] p.%s' % (current, current+startat)
 
     if turnbyturn:
-        rot_turn = 180*(current%2-1)
+        rot_turn = 180*(current%2-(righttoleft)) # 右から左だと、反転から始まる
     else:
         rot_turn = 180
 
-    if rot_turn == 0:
+    if rot_turn == 0: # ロゴと同じ向きが rot_turn==180
         msg += '\nupsidedown relative to EPSON logo'
     return msg, rot_turn
 
@@ -74,6 +76,7 @@ def main():
     devname = device[0]
     dev = sane.open(devname)
     dev.scan_area = scan_area
+    # set_trace()
 
     ret = 0
     n = 0
@@ -171,7 +174,7 @@ def main():
             commands = []
             djvu = pbm.replace('pbm', 'djvu')
             commands.append('cjb2 -clean %s %s' % (pbm, djvu))
-            commands.append('c44 -dpi 300 %s %s' % (pbm.replace('.pbm', '.jpeg'), pbm.replace('.pbm', '_color.djvu')))
+            commands.append('c44 -dpi %s %s %s' % (dev.resolution, pbm.replace('.pbm', '.jpeg'), pbm.replace('.pbm', '_color.djvu')))
             if ocr:
                 commands.append('ocrodjvu --in-place -l jpn %s' % (djvu))
                 commands.append('djvused %s -e "select 1; print-txt" > %s' % (djvu, djvu.replace('.djvu', '.txt')))
@@ -183,7 +186,23 @@ def main():
                 os.system(cmd)
         
         firsttime=False
-        os.system('spd-say "ok"')
+        # os.system('spd-say "ok"')
+        if n % 2 == 0:
+            os.system('spd-say "turn page"')
+            time.sleep(1)
+            if righttoleft:
+                os.system('spd-say "right"')
+            else:
+                os.system('spd-say "left"')
+        else:
+            os.system('spd-say "go to"')
+            time.sleep(1)
+            if righttoleft:
+                os.system('spd-say "left"')
+            else:
+                os.system('spd-say "right"')
+        time.sleep(1)
+        os.system('spd-say "page %s"' % (n+startat+1))
 
     sane.exit()
     
