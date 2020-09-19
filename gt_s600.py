@@ -80,13 +80,18 @@ def main():
 
     ret = 0
     n = -1
+
     while True:
         msg, rot_turn = calc_page_params(perpage, righttoleft, startat, n, 1, turnbyturn)
         print(msg)
-        print('press return if ok.')
+        inc = 1
+        print('press return if')
+        print('%s(old n) + %s(inc) = %s(page%03d)' % (n, inc, n+inc, n+inc))
+        print('is ok')
+        print('or other [inc] parameter')
         ret = sys.stdin.readline()
         if ret == '\n':
-            inc = 1
+            pass
         elif ret.strip().replace('-', '').isdigit():
             while True:
                 inc = int(ret)
