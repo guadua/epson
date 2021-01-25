@@ -192,7 +192,7 @@ def main():
         
         firsttime=False
         # os.system('spd-say "ok"')
-        if n % 2 == 0:
+        if perpage > 1:
             os.system('spd-say "turn page"')
             time.sleep(1)
             if righttoleft:
@@ -207,7 +207,7 @@ def main():
             else:
                 os.system('spd-say "right"')
         time.sleep(1)
-        os.system('spd-say "page %s"' % (n+startat+1))
+        os.system('spd-say "page %s"' % ((n+1)*perpage+startat))
 
     sane.exit()
     
