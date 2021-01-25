@@ -192,7 +192,7 @@ def main():
         
         firsttime=False
         # os.system('spd-say "ok"')
-        if perpage > 1:
+        if perpage > 1 or (perpage == 1 and (n % 2) == 0):
             os.system('spd-say "turn page"')
             time.sleep(1)
             if righttoleft:
